@@ -12,7 +12,7 @@ IPAddr : str = gethostbyname(hostname)
 
 producer = KafkaProducer(boostrap_servers='localhost:5000')
 
-coordinates : tuple(float, float) = init_coord()
+coordinates : tuple((float, float)) = init_coord()
 date : float = datetime.timestamp(datetime.now())
 producer.send("coordinates", b"" + coord_to_json(coordinates) + ip_to_json(IPAddr) + datetime_to_json(date))
 
