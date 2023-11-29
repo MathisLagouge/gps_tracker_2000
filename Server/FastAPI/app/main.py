@@ -1,10 +1,6 @@
 from fastapi import FastAPI
-from kafka import KafkaConsumer
+import time
 
-consumer = KafkaConsumer('gps_coordinates')
-
-for message in consumer:
-    print(message)
 
 app = FastAPI()
 

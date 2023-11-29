@@ -1,0 +1,1 @@
+Check if the kafka broker is running: kafkacat -b localhost:9092 -t gps_coordinates -L
