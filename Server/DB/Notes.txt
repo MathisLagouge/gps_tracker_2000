@@ -1,0 +1,16 @@
+Table:
+CREATE TABLE gps_coordinates (
+    IP VARCHAR(20),
+    LAT FLOAT,
+    LONG FLOAT,
+    timestamp TIMESTAMP,
+    PRIMARY KEY (IP, timestamp)
+);
+
+
+
+
+INSERT INTO gps_coordinates (IP, LAT, LONG, TIMESTAMP)
+VALUES ('192.168.1.1', 40.7128, -74.0060, '2023-11-29 12:30:00');
+
+SELECT * FROM gps_coordinates;
