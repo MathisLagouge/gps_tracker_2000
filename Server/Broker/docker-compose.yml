@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -13,9 +13,10 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_CREATE_TOPICS: "coordinates:1:1"
     ports:
       - "9092:9092"
-      
+
   postgres:
     image: postgres:latest
     environment:
@@ -25,18 +26,25 @@ services:
     ports:
       - "5432:5432"
 
+  fastApiCons:
+    image: fastapi-ws:latest
+    ports:
+      - "80:80"
+
+  consumer:
+    image: consumerdc:latest
+    depends_on:
+      - kafka
+      - postgres
+    tty: true
+
   pgAdmin:
-    image: dpage/pgadmin4
+    image: dpage/pgadmin4:latest
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@test.fr
-      PGADMIN_DEFAULT_PASSWORD: complicatedPassword
+      PGADMIN_DEFAULT_PASSWORD: password
       PGADMIN_SERVER_JSON_FILE: /pgadmin4/servers.json
     volumes:
       - ./server.json:/pgadmin4/servers.json
     ports:
       - "82:80"
-
-  fastApiCons:
-    image: fastapi-consumer
-    ports:
-    - "80:80"
