@@ -30,5 +30,13 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@test.fr
       PGADMIN_DEFAULT_PASSWORD: complicatedPassword
+      PGADMIN_SERVER_JSON_FILE: /pgadmin4/servers.json
+    volumes:
+      - ./server.json:/pgadmin4/servers.json
     ports:
       - "82:80"
+
+  fastApiCons:
+    image: fastapi-consumer
+    ports:
+    - "80:80"
