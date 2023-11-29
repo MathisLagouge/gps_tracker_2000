@@ -10,7 +10,7 @@ DELAY : float = 0.5
 hostname : str = gethostname()
 IPAddr : str = gethostbyname(hostname)
 
-producer = KafkaProducer(boostrap_servers='localhost:5000')
+producer = KafkaProducer(boostrap_servers='kafka:9092')
 
 coordinates : tuple((float, float)) = init_coord()
 date : float = datetime.timestamp(datetime.now())
