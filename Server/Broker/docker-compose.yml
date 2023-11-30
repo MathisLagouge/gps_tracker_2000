@@ -31,12 +31,12 @@ services:
     ports:
       - "80:80"
 
-  consumer:
-    image: consumerdc:latest
-    depends_on:
-      - kafka
-      - postgres
-    tty: true
+  # consumer:
+  #   image: consumerdc:latest
+  #   depends_on:
+  #     - kafka
+  #     - postgres
+  #   tty: true
 
   pgAdmin:
     image: dpage/pgadmin4:latest
