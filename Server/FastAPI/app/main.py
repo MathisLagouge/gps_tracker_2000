@@ -30,14 +30,10 @@ def connect_to_postgresql_db():
     
 
 def store_message_in_db(message: bytes):
+    
     msg = message.decode()
-    print("----------------------------------------")
-    print("got message:")
-    print(msg)
-
+   
     parsed_msg = json.loads(msg)
-    print("parsed message:")
-    print(parsed_msg)
     db = connect_to_postgresql_db()
     cur = db.cursor()
 
@@ -45,6 +41,8 @@ def store_message_in_db(message: bytes):
                 (parsed_msg['ip'], parsed_msg['lattitude'], parsed_msg['longitude'], datetime.fromtimestamp(float(parsed_msg['timestamp']))))
     db.commit()
     cur.close()
+    
+    print("Stored {} in database".format(parsed_msg))
 
 def execute_db_commands():
     consumer = connect_to_kafka_with_retry()
@@ -53,6 +51,7 @@ def execute_db_commands():
         
     print("----------------------------------------")
     print("Connected to Kafka and PostgreSQL")
+    print("----------------------------------------")
     commands = [
         "CREATE TABLE gps_coordinates (IP VARCHAR(20),LAT FLOAT,LONG FLOAT,timestamp TIMESTAMP,PRIMARY KEY (IP, timestamp));"
     ]
@@ -68,20 +67,11 @@ def execute_db_commands():
         print(f"Error: {e}")
         db.rollback()
     finally:
-        while True:
-            print("Waiting for messages...")
-            # Fake entry to test db connection
-            try:
-                store_message_in_db({"IP": "172.0.0.1", "LAT": 1, "LONG": 2, "timestamp": '2021-05-20 12:07:18-09'})
-                print("Message stored in db")
-            except Exception as e:
-                print(f"Error: {e}")
-                
-            
-            for message in consumer:
-                print(message.value)
-                store_message_in_db(message.value)
-            time.sleep(1)
+        print("Waiting for messages...")
+        for message in consumer:
+            print(message.value)
+            store_message_in_db(message.value)
+        print("Closing connection to Kafka and PostgreSQL")
         db.close()
 
 
@@ -94,6 +84,7 @@ async def read_main():
     return {"msg": "Hello World"}
 
 
+
 @app.websocket("/ws")
 async def websocket(websocket: WebSocket):
     await websocket.accept()
@@ -102,3 +93,27 @@ async def websocket(websocket: WebSocket):
 
 db_thread = threading.Thread(target=execute_db_commands)
 db_thread.start()
+
+# List ips of connected devices
+@app.get("/ips")
+async def list_ips():
+    db = connect_to_postgresql_db()
+    cur = db.cursor()
+    cur.execute("SELECT DISTINCT IP FROM gps_coordinates")
+    ips = cur.fetchall()
+    cur.close()
+    db.close()
+    return {"ips": ips}
+
+# List coordinates of a specific device
+@app.get("/coordinates/{ip}")
+async def list_coordinates(ip: str):
+    db = connect_to_postgresql_db()
+    cur = db.cursor()
+    cur.execute("SELECT LAT, LONG, timestamp FROM gps_coordinates WHERE IP = %s", (ip,))
+    coordinates = cur.fetchall()
+    cur.close()
+    db.close()
+    return {"coordinates": coordinates}
+
+
