@@ -85,11 +85,6 @@ async def read_main():
 
 
 
-@app.websocket("/ws")
-async def websocket(websocket: WebSocket):
-    await websocket.accept()
-    await websocket.send_json({"msg": "Hello WebSocket"})
-    await websocket.close()
 
 db_thread = threading.Thread(target=execute_db_commands)
 db_thread.start()
@@ -116,4 +111,8 @@ async def list_coordinates(ip: str):
     db.close()
     return {"coordinates": coordinates}
 
-
+@app.websocket("/ws")
+async def websocket(websocket: WebSocket):
+    await websocket.accept()
+    await websocket.send_json({"msg": "Hello WebSocket"})
+    await websocket.close()
