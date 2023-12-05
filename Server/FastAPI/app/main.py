@@ -5,6 +5,7 @@ import threading
 from datetime import datetime
 from kafka import KafkaConsumer
 import psycopg2
+import json
 import time
 
 def connect_to_kafka_with_retry():
@@ -28,10 +29,20 @@ def connect_to_postgresql_db():
             time.sleep(5)
     
 
-def store_message_in_db(message):
+def store_message_in_db(message: bytes):
+    msg = message.decode()
+    print("----------------------------------------")
+    print("got message:")
+    print(msg)
+
+    parsed_msg = json.loads(msg)
+    print("parsed message:")
+    print(parsed_msg)
     db = connect_to_postgresql_db()
     cur = db.cursor()
-    cur.execute("INSERT INTO gps_coordinates (IP, LAT, LONG, timestamp) VALUES (%s, %s, %s, %s)", (message['IP'], message['LAT'], message['LONG'], message['timestamp']))
+
+    cur.execute("INSERT INTO gps_coordinates (IP, LAT, LONG, timestamp) VALUES (%s, %s, %s, %s)",
+                (parsed_msg['ip'], parsed_msg['lattitude'], parsed_msg['longitude'], datetime.fromtimestamp(float(parsed_msg['timestamp']))))
     db.commit()
     cur.close()
 
@@ -60,8 +71,13 @@ def execute_db_commands():
         while True:
             print("Waiting for messages...")
             # Fake entry to test db connection
-            store_message_in_db({"IP": "172.0.0.1", "LAT": 1, "LONG": 2, "timestamp": '2021-05-20 12:07:18-09'})
-            print("Message stored in db")
+            try:
+                store_message_in_db({"IP": "172.0.0.1", "LAT": 1, "LONG": 2, "timestamp": '2021-05-20 12:07:18-09'})
+                print("Message stored in db")
+            except Exception as e:
+                print(f"Error: {e}")
+                
+            
             for message in consumer:
                 print(message.value)
                 store_message_in_db(message.value)
