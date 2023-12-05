@@ -13,7 +13,6 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_CREATE_TOPICS: "coordinates:1:1"
     ports:
       - "9092:9092"
 
@@ -29,14 +28,15 @@ services:
   fastApiCons:
     image: fastapi-ws:latest
     ports:
-      - "80:80"
+      - "81:80"
+    tty: true
 
-  # consumer:
-  #   image: consumerdc:latest
-  #   depends_on:
-  #     - kafka
-  #     - postgres
-  #   tty: true
+  # To test the producer
+  gps-producer:
+    image: gps-producer:latest
+    depends_on:
+      - kafka
+    tty: true
 
   pgAdmin:
     image: dpage/pgadmin4:latest
