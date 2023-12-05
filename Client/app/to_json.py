@@ -4,6 +4,18 @@
 import json
 import datetime
 
+
+#message to json as string
+def msg_to_json(coordinates: tuple((float,float)), ip: str, timestamp: float) -> str:
+
+    dict_msg: dict = {
+        "lattitude": str(coordinates[0]),
+        "longitude": str(coordinates[1]),
+        "ip": ip,
+        "timestamp": str(timestamp)
+    }
+
+    return json.dumps(dict_msg)
 #coordinate to json as string
 def coord_to_json(coordinates: tuple((float,float))) -> str :
 
