@@ -48,3 +48,7 @@ services:
       - ./server.json:/pgadmin4/servers.json
     ports:
       - "82:80"
+  frontend:
+    image: frontend:latest
+    ports:
+      - "4200:4200"
