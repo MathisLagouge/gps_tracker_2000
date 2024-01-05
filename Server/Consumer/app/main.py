@@ -1,3 +1,4 @@
+# OLD SCRIPT - NOT USED ANYMORE (The consumer is now in the FastAPI app)
 from kafka import KafkaConsumer
 import psycopg2
 import time
@@ -30,7 +31,7 @@ db = connect_to_postgresql_db()
 print("----------------------------------------")
 print("Connected to Kafka and PostgreSQL")
 commands = [
-    "CREATE TABLE gps_coordinates (IP VARCHAR(20),LAT FLOAT,LONG FLOAT,timestamp TIMESTAMP,PRIMARY KEY (IP, timestamp));"
+    "CREATE TABLE IF NOT EXISTS gps_coordinates (IP VARCHAR(20),LAT FLOAT,LONG FLOAT,timestamp TIMESTAMP,PRIMARY KEY (IP, timestamp));"
 ]
 
 try:
