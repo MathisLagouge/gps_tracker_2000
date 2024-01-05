@@ -6,3 +6,14 @@
   
 </div>
 
+<div class="legend">
+  <h3>Legend</h3>
+  <table>
+    <tr *ngFor="let lg_marker of legend_markers">
+      <td [style.background-color]="lg_marker.color"></td>
+      <td>{{ lg_marker.label }}</td>
+    </tr>
+  </table>
+</div>
+  
+

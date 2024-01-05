@@ -6,6 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MapComponent } from './map/map.component';
 import { WebsocketService } from './websocket.service';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { WebsocketService } from './websocket.service';
   ],
   imports: [
     BrowserModule,
+    CommonModule,
     AppRoutingModule,
     LeafletModule,
     MapComponent
