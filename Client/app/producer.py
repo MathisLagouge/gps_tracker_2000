@@ -24,7 +24,7 @@ def connect_to_kafka_with_retry(ip):
 
 def main(delay, ip):
 
-    producer = connect_to_kafka_with_retry()
+    producer = connect_to_kafka_with_retry(ip)
 
     print("------------------------------")
     print("Producer is running")
