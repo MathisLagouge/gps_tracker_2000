@@ -38,6 +38,7 @@ services:
       - kafka
     environment:
       TIME_INTERVAL: 1.0
+      KAFKA_IP: kafka:9092
     tty: true
   
   pgAdmin:
