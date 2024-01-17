@@ -105,39 +105,40 @@ export class MapComponent implements OnInit {
   }
 
   updateMarkers() {
-    // Clear existing markers
-    this.markers.forEach((marker) => marker.removeFrom(this.map));
+    // Object to store the most recent marker data for each IP
+    const latestMarkers: { [key: string]: any } = {};
+  
+    // Update latestMarkers with the most recent data for each IP
+    this.ws.markers.forEach(marker => {
+      if (marker) {
+        latestMarkers[marker.IP] = marker;
+      }
+    });
+  
+    // Clear existing markers from the map
+    this.markers.forEach(marker => marker.remove());
     this.markers = [];
-
-    // Add the last marker
-    const lastMarker = this.ws.markers[this.ws.markers.length - 1];
-    if (lastMarker) {
-      let color = '#ff0000';
-      for (let i = 0; i < this.ip_color.length; i++) {
-        if (this.ip_color[i].ip == lastMarker.IP) {
-          color = this.ip_color[i].color;
-          continue;
-        }
-      }
-
-      if (color == '#ff0000') {
+  
+    // Iterate over latestMarkers to create and add new markers
+    Object.values(latestMarkers).forEach((marker: any) => {
+      let color = this.ip_color.find(ic => ic.ip === marker.IP)?.color || '#ff0000';
+      if (color === '#ff0000') {
         // Generate random color
-        color = "000000".replace(/0/g,function(){return (~~(Math.random()*16)).toString(16);});
-
-        this.ip_color.push({ ip: lastMarker.IP, color: color });
-        this.legend_markers.push({ color: "#" + color, label: lastMarker.IP });
+        color = "000000".replace(/0/g, () => (~~(Math.random()*16)).toString(16));
+        this.ip_color.push({ ip: marker.IP, color: color });
+        this.legend_markers.push({ color: "#" + color, label: marker.IP });
       }
-
+  
       const data = {
-        position: { lat: lastMarker.LAT, lng: lastMarker.LONG },
+        position: { lat: marker.LAT, lng: marker.LONG },
         draggable: false,
         color: color,
       };
-      let mk = this.generateMarker(data, 0); // Index 0 since there is only one marker
+      let mk = this.generateMarker(data, this.markers.length);
       mk.addTo(this.map).bindPopup(
-        `<b>${lastMarker.IP} - ${lastMarker.timestamp} </b> :  ${data.position.lat},  ${data.position.lng}`
+        `<b>${marker.IP} - ${marker.timestamp} </b> :  ${data.position.lat},  ${data.position.lng}`
       );
       this.markers.push(mk);
-    }
+    });
   }
 }

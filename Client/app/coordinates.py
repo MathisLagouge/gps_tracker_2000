@@ -20,10 +20,10 @@ def init_speed(time: float) -> tuple((float,float)):
 
     alpha = random.uniform(-math.pi,math.pi)
 
-    latitude = time * math.cos(alpha) * random.uniform(0,1)
-    longitude = time * math.sin(alpha) * random.uniform(0,1)
+    latitude = time * math.cos(alpha) * random.uniform(0.5,1)
+    longitude = time * math.sin(alpha) * random.uniform(0.5,1)
 
-    return (latitude / 50, longitude / 50)
+    return (latitude / 40, longitude / 40)
 
 # move a point
 # return new position
