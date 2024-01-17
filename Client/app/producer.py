@@ -4,6 +4,7 @@ from time import sleep
 from socket import gethostname, gethostbyname
 from datetime import datetime
 from kafka import KafkaProducer
+import os
 import argparse
 
 hostname : str = gethostname()
@@ -47,16 +48,10 @@ def main(delay):
         producer.send("coordinates", msg)
         
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="")
-    
-    # Add arguments to the parser
-    parser.add_argument("interval", type=str, help="time interval")
-
-    # Parse the command-line arguments
-    args = parser.parse_args()
-
+    interval = os.environ.get('TIME_INTERVAL', '5.0')
+    print("Running producer with interval: " + interval)
     # Call the main function with the parsed arguments
-    main(args.arg1)
+    main(float(interval))
 
     
 
