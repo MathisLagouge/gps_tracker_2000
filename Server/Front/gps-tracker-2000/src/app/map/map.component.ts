@@ -21,7 +21,7 @@ export class MapComponent implements OnInit {
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       }),
     ],
-    zoom: 16,
+    zoom: 6,
     // Center on paris by default
     center: { lat: 48.866667, lng: 2.333333 },
   };
@@ -54,7 +54,7 @@ export class MapComponent implements OnInit {
     Leaflet.Marker.prototype.options.icon = iconDefault;
     setInterval(() => {
       this.ws.sendMessage('u');
-    }, 2000);
+    }, 500);
   }
 
   generateMarker(data: any, index: number) {
@@ -105,28 +105,16 @@ export class MapComponent implements OnInit {
   }
 
   updateMarkers() {
-    // console.log('updating markers');
-    // console.log(this.ws.markers);
+    // Clear existing markers
+    this.markers.forEach((marker) => marker.removeFrom(this.map));
+    this.markers = [];
 
-    this.ws.markers.forEach((marker, index) => {
-      // Check if marker is already on the map
-      for (let i = 0; i < this.markers.length; i++) {
-        if (
-          this.markers[i].getLatLng().lat == marker.LAT &&
-          this.markers[i].getLatLng().lng == marker.LONG
-        ) {
-          // console.log('marker already exists');
-          return;
-        }
-      }
-      if (!marker) {
-        // console.log('marker is null');
-        return;
-      }
-
+    // Add the last marker
+    const lastMarker = this.ws.markers[this.ws.markers.length - 1];
+    if (lastMarker) {
       let color = '#ff0000';
       for (let i = 0; i < this.ip_color.length; i++) {
-        if (this.ip_color[i].ip == marker.IP) {
+        if (this.ip_color[i].ip == lastMarker.IP) {
           color = this.ip_color[i].color;
           continue;
         }
@@ -136,21 +124,20 @@ export class MapComponent implements OnInit {
         // Generate random color
         color = "000000".replace(/0/g,function(){return (~~(Math.random()*16)).toString(16);});
 
-        this.ip_color.push({ ip: marker.IP, color: color });
-        this.legend_markers.push({ color: "#" + color, label: marker.IP });
+        this.ip_color.push({ ip: lastMarker.IP, color: color });
+        this.legend_markers.push({ color: "#" + color, label: lastMarker.IP });
       }
 
       const data = {
-        position: { lat: marker.LAT, lng: marker.LONG },
+        position: { lat: lastMarker.LAT, lng: lastMarker.LONG },
         draggable: false,
         color: color,
       };
-      let i = this.markers.length > 0 ? this.markers.length - 1 : 0;
-      let mk = this.generateMarker(data, i);
+      let mk = this.generateMarker(data, 0); // Index 0 since there is only one marker
       mk.addTo(this.map).bindPopup(
-        `<b>${marker.IP} - ${marker.timestamp} </b> :  ${data.position.lat},  ${data.position.lng}`
+        `<b>${lastMarker.IP} - ${lastMarker.timestamp} </b> :  ${data.position.lat},  ${data.position.lng}`
       );
       this.markers.push(mk);
-    });
+    }
   }
 }
