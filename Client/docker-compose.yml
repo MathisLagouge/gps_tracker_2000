@@ -1,7 +1,9 @@
 version: '3'
 services:
+  # To test the producer
   gps-producer:
-    image: gps-producer
-    depends_on:
-      - kafka
+    image: gps-producer:latest
+    environment:
+      TIME_INTERVAL: 1.0
+      KAFKA_IP: kafka:9092
     tty: true
