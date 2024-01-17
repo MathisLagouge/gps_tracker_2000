@@ -11,18 +11,18 @@ hostname : str = gethostname()
 IPAddr : str = gethostbyname(hostname)
 
 
-def connect_to_kafka_with_retry():
+def connect_to_kafka_with_retry(ip):
     while True:
         print("Connecting to Kafka...")
         try:
-            producer = KafkaProducer(bootstrap_servers='kafka:9092')
+            producer = KafkaProducer(bootstrap_servers=ip)
             return producer
         except Exception as e:
             print(f"Connection failed: {e}")
             print("Retrying in 5 seconds...")
             sleep(5)
 
-def main(delay):
+def main(delay, ip):
 
     producer = connect_to_kafka_with_retry()
 
@@ -49,9 +49,11 @@ def main(delay):
         
 if __name__ == "__main__":
     interval = os.environ.get('TIME_INTERVAL', '5.0')
+    ip = os.environ.get('KAFKA_IP', 'kafka:9092')
     print("Running producer with interval: " + interval)
+    print("Running producer with ip: " + ip)
     # Call the main function with the parsed arguments
-    main(float(interval))
+    main(float(interval), str(ip))
 
     
 
