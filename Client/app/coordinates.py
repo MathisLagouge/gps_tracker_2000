@@ -1,19 +1,25 @@
 # import
 import random
 
+#coordinate in France for initialization
+latitude_max = 48.6
+latitude_min = 43.6
+longitude_max = -0.2
+longitude_min = -5.7
+
 #init coordinates (lat,long)
 #return random coordinates
 def init_coord() -> tuple((float,float)):
 
-    return (random.uniform(-90,90), random.uniform(-180,180))
+    return (random.uniform(latitude_min, latitude_max), random.uniform(longitude_min, longitude_max))
 
 #init speed
 #return speed vector, [-1 degres,1 degres]
-def init_speed() -> tuple((float,float)):
+def init_speed(time: float) -> tuple((float,float)):
     
-    return (random.uniform(-1,1), random.uniform(-1,1))
+    return (random.uniform(-time,time), random.uniform(-time,time))
 
-# move
+# move a point
 # return new position
 def move(coordinates: tuple((float,float)), speed: tuple((float,float))) -> tuple((float,float)):
 
