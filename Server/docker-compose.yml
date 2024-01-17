@@ -36,8 +36,10 @@ services:
     image: gps-producer:latest
     depends_on:
       - kafka
+    environment:
+      TIME_INTERVAL: 1.0
     tty: true
-
+  
   pgAdmin:
     image: dpage/pgadmin4:latest
     environment:
