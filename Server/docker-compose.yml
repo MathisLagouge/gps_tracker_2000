@@ -12,9 +12,13 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      # INSERT YOUR IP HERE
+
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://172.17.4.174:9092
+      # KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
     ports:
       - "9092:9092"
+    
 
   postgres:
     image: postgres:latest
@@ -32,14 +36,14 @@ services:
     tty: true
 
   # To test the producer
-  gps-producer:
-    image: gps-producer:latest
-    depends_on:
-      - kafka
-    environment:
-      TIME_INTERVAL: 1.0
-      KAFKA_IP: kafka:9092
-    tty: true
+  # gps-producer:
+  #   image: gps-producer:latest
+  #   depends_on:
+  #     - kafka
+  #   environment:
+  #     TIME_INTERVAL: 1.0
+  #     KAFKA_IP: kafka:9092
+  #   tty: true
   
   pgAdmin:
     image: dpage/pgadmin4:latest
