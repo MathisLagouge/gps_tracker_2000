@@ -5,5 +5,7 @@ services:
     image: gps-producer:latest
     environment:
       TIME_INTERVAL: 1.0
+      # Insert server IP here, for example:
+      # KAFKA_IP: 172.17.4.174:9092
       KAFKA_IP: kafka:9092
     tty: true
