@@ -48,6 +48,7 @@ In Browser:
     username: admin@test.fr
     password: password
     
+# Go to the application
 In browser
 
     https://localhost:4200/
