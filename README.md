@@ -39,7 +39,15 @@ In Server/ repository
     # KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
     
     $- docker-compose up
+# Check the SQL database 
+The database is using PostgreSQL. It contains the history of all tracked positions. 
+In Browser:
 
+    http://localhost:82/
+
+    username: admin@test.fr
+    password: password
+    
 In browser
 
     https://localhost:4200/
